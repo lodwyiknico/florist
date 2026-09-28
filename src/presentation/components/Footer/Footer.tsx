@@ -1,5 +1,5 @@
-import React from 'react'
 import Link from 'next/link'
+import { FloristLogo } from '@shared/components/FloristLogo/FloristLogo'
 import styles from './Footer.module.css'
 
 const CURRENT_YEAR = 2026
@@ -10,7 +10,7 @@ export const Footer = () => {
       <div className={styles.footerContent}>
         <div className={styles.brandCol}>
           <div className={styles.brandTitle}>
-            <span>🌸</span>
+            <FloristLogo size={32} />
             <span>Florist Indonesia</span>
           </div>
           <p className={styles.brandDesc}>

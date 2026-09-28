@@ -3,6 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { FloristLogo } from '@shared/components/FloristLogo/FloristLogo'
 import { useCart } from '@shared/context/CartContext'
 import styles from './Navbar.module.css'
 
@@ -21,9 +22,7 @@ export const Navbar = () => {
     <header className={styles.header}>
       <nav className={styles.navContainer} aria-label="Navigasi Utama">
         <Link href="/" id="nav-brand-logo" className={styles.logo}>
-          <span className={styles.logoIcon} aria-hidden="true">
-            🌸
-          </span>
+          <FloristLogo size={36} />
           <span className={styles.logoText}>Florist</span>
         </Link>
 
