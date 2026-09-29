@@ -1,13 +1,15 @@
 'use client'
 
 import Link from 'next/link'
-import { FLOWER_PRODUCTS } from '@infrastructure/data/products'
+import { useCatalog } from '@features/catalog/context/CatalogContext'
 import { useCart } from '@shared/context/CartContext'
 import styles from './page.module.css'
 
 export default function HomePage() {
+  const { products } = useCatalog()
   const { addToCart } = useCart()
-  const featuredProducts = FLOWER_PRODUCTS.slice(0, 4)
+  const featuredProducts = products.slice(0, 4)
+
 
   const formatRupiah = (val: number) =>
     new Intl.NumberFormat('id-ID', {
@@ -117,9 +119,10 @@ export default function HomePage() {
 
           <div style={{ textAlign: 'center', marginTop: '3rem' }}>
             <Link href="/koleksi" className={styles.secondaryCta}>
-              Jelajahi Semua Koleksi ({FLOWER_PRODUCTS.length}+ Rangkaian) →
+              Jelajahi Semua Koleksi ({products.length}+ Rangkaian) →
             </Link>
           </div>
+
         </section>
 
         {/* Features / Value Proposition */}

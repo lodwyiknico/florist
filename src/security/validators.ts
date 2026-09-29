@@ -57,3 +57,66 @@ export const phoneSchema = z
   .string()
   .transform((val) => val.replace(/\D/g, ''))
   .pipe(z.string().regex(/^(62|0)[0-9]{8,13}$/, 'Nomor telepon tidak valid'))
+
+// ============================================================
+// Flower Product Schema (CMS & Catalog)
+// ============================================================
+
+export const flowerCategorySchema = z.enum([
+  'buket',
+  'meja',
+  'standing',
+  'wisuda',
+  'anniversary',
+])
+
+export const flowerProductSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(3, 'Nama rangkaian minimal 3 karakter')
+    .max(100, 'Nama rangkaian maksimal 100 karakter'),
+  category: flowerCategorySchema,
+  price: z
+    .number()
+    .min(1000, 'Harga minimal Rp 1.000')
+    .max(100000000, 'Harga melebihi batas maksimal'),
+  originalPrice: z
+    .number()
+    .min(1000, 'Harga coret minimal Rp 1.000')
+    .optional()
+    .nullable(),
+
+  rating: z
+    .number()
+    .min(1, 'Rating minimal 1.0')
+    .max(5, 'Rating maksimal 5.0')
+    .default(5.0),
+  reviewsCount: z.number().int().min(0, 'Jumlah ulasan tidak boleh negatif').default(0),
+  image: z
+    .string()
+    .trim()
+    .min(1, 'URL gambar wajib diisi')
+    .refine(
+      (val) =>
+        val.startsWith('http://') ||
+        val.startsWith('https://') ||
+        val.startsWith('/') ||
+        val.startsWith('data:image/'),
+      { message: 'URL gambar harus berupa link valid (http, https, atau path gambar)' }
+    ),
+  tags: z.array(z.string().trim().min(1)).default([]),
+  flowersIncluded: z
+    .array(z.string().trim().min(1))
+    .min(1, 'Minimal cantumkan 1 jenis bunga yang disertakan'),
+  description: z
+    .string()
+    .trim()
+    .min(10, 'Deskripsi minimal 10 karakter')
+    .max(1000, 'Deskripsi maksimal 1000 karakter'),
+  isBestSeller: z.boolean().optional().default(false),
+  isNew: z.boolean().optional().default(false),
+})
+
+export type FlowerProductFormData = z.infer<typeof flowerProductSchema>
+

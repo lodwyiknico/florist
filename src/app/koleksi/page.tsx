@@ -2,11 +2,12 @@
 
 import React, { useMemo, useState } from 'react'
 import type { FlowerCategory, FlowerProduct } from '@domain/models/FlowerProduct'
-import { FLOWER_PRODUCTS } from '@infrastructure/data/products'
+import { useCatalog } from '@features/catalog/context/CatalogContext'
 import { useCart } from '@shared/context/CartContext'
 import styles from './koleksi.module.css'
 
 export default function KoleksiPage() {
+  const { products } = useCatalog()
   const { addToCart } = useCart()
   const [selectedCategory, setSelectedCategory] = useState<FlowerCategory>('semua')
   const [searchQuery, setSearchQuery] = useState('')
@@ -22,7 +23,7 @@ export default function KoleksiPage() {
   ]
 
   const filteredProducts = useMemo(() => {
-    let result = FLOWER_PRODUCTS.filter((product) => {
+    let result = products.filter((product) => {
       const matchCat = selectedCategory === 'semua' || product.category === selectedCategory
       const matchSearch =
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -30,6 +31,7 @@ export default function KoleksiPage() {
         product.flowersIncluded.some((f) => f.toLowerCase().includes(searchQuery.toLowerCase()))
       return matchCat && matchSearch
     })
+
 
     if (sortBy === 'termurah') {
       result = [...result].sort((a, b) => a.price - b.price)
@@ -43,7 +45,8 @@ export default function KoleksiPage() {
     }
 
     return result
-  }, [selectedCategory, searchQuery, sortBy])
+  }, [products, selectedCategory, searchQuery, sortBy])
+
 
   const formatRupiah = (val: number) =>
     new Intl.NumberFormat('id-ID', {

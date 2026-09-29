@@ -5,8 +5,9 @@ export interface FlowerProduct {
   name: string
   category: Exclude<FlowerCategory, 'semua'>
   price: number
-  originalPrice?: number
+  originalPrice?: number | null
   rating: number
+
   reviewsCount: number
   image: string
   tags: string[]

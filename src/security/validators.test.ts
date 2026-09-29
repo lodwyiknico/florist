@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { emailSchema, phoneSchema, sanitizeHTML, stripHTML } from './validators'
+import {
+  emailSchema,
+  flowerProductSchema,
+  phoneSchema,
+  sanitizeHTML,
+  stripHTML,
+} from './validators'
 
 describe('Security Validators', () => {
   describe('sanitizeHTML', () => {
@@ -42,4 +48,50 @@ describe('Security Validators', () => {
       }
     })
   })
+
+  describe('flowerProductSchema', () => {
+    it('should validate valid flower product input', () => {
+      const validProduct = {
+        name: 'Buket Mawar Pink Romantis',
+        category: 'buket',
+        price: 350000,
+        originalPrice: 400000,
+        rating: 4.8,
+        reviewsCount: 15,
+        image: 'https://images.unsplash.com/photo-1561181286-d3fee7d55364',
+        tags: ['Romantis', 'Mawar'],
+        flowersIncluded: ['Mawar Pink', 'Baby Breath'],
+        description: 'Buket mawar pink segar pilihan untuk momen romantis terbaik.',
+        isBestSeller: true,
+        isNew: false,
+      }
+
+      const res = flowerProductSchema.safeParse(validProduct)
+      expect(res.success).toBe(true)
+    })
+
+    it('should fail if required fields are missing or invalid', () => {
+      const invalidProduct = {
+        name: 'AB', // too short (< 3)
+        category: 'invalid-cat',
+        price: -100, // negative price
+        image: 'not-a-valid-url',
+        flowersIncluded: [], // min 1
+        description: 'Short', // too short (< 10)
+      }
+
+      const res = flowerProductSchema.safeParse(invalidProduct)
+      expect(res.success).toBe(false)
+      if (!res.success) {
+        const issues = res.error.issues.map((i) => i.path[0])
+        expect(issues).toContain('name')
+        expect(issues).toContain('category')
+        expect(issues).toContain('price')
+        expect(issues).toContain('image')
+        expect(issues).toContain('flowersIncluded')
+        expect(issues).toContain('description')
+      }
+    })
+  })
 })
+
